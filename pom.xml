@@ -6,6 +6,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>chap02</module>
+        <module>chap03</module>
     </modules>
 
     <parent>
