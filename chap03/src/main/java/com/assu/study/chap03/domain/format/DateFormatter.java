@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateFormatter implements Formatter<Date> { // Formatter 인터페이스 구현
+
+    // SimpleDateFormat 은 멀티 스레드에 안전하지 않으므로 클래스 속성으로 사용하면 안되는 대표적인 클래스임
     private SimpleDateFormat sdf;
 
     public DateFormatter(String pattern) {
@@ -22,6 +24,7 @@ public class DateFormatter implements Formatter<Date> { // Formatter 인터페�
         return sdf.format(target);
     }
 
+    // 클래스 변수인 SimpleDateFormat sdf 의 parse() 를 실행하므로 멀티 스레드 환경에 안전하지 않음
     public Date parse(String dateString) throws ParseException {
         return sdf.parse(dateString);
     }

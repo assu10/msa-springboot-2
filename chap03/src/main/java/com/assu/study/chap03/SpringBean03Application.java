@@ -30,7 +30,6 @@ public class SpringBean03Application {
         } catch (IOException e) {
             log.error("error: ", e);
         }
-
         ctxt.close();
     }
 }
