@@ -7,6 +7,7 @@
     <modules>
         <module>chap02</module>
         <module>chap03</module>
+        <module>chap04</module>
     </modules>
 
     <parent>
@@ -30,7 +31,7 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
