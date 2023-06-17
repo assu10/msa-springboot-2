@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+
 @Controller // DispatcherServlet 이 전달하는 사용자 요청을 받는 클래스
 public class ApiController {
   private HotelSearchService hotelSearchService;
