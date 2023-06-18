@@ -1,10 +1,19 @@
 package com.assu.study.chap05.controller;
 
+import com.assu.study.chap05.domain.FileDownloadException;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,5 +36,43 @@ public class ReservationController {
     });
 
     return Collections.emptyList();
+  }
+
+  // pdf byte 정보 조회
+  @GetMapping(value = "/hotels/pdf/getByte")
+  public ResponseEntity<byte[]> getInvoice() {
+    String filePath = "pdf/hotel_invoice.pdf";  // resources/pdf/hotel_invoice.pdf
+
+    try (InputStream inputStream = new ClassPathResource(filePath).getInputStream()) {
+      // inputStream 객체를 byte[] 로 변환 후 리턴
+      byte[] bytes = StreamUtils.copyToByteArray(inputStream);
+      return new ResponseEntity<>(bytes, HttpStatus.OK);
+    } catch (Throwable th) {
+      th.printStackTrace();
+      throw new FileDownloadException("file read Error~");
+    }
+  }
+
+  // pdf download
+  @GetMapping(value = "/hotels/pdf/download", produces = "application/pdf")
+  public void downloadInvoice(
+          HttpServletResponse response
+  ) {
+    String filePath = "pdf/hotel_invoice.pdf";  // resources/pdf/hotel_invoice.pdf
+
+    try (InputStream inputStream = new ClassPathResource(filePath).getInputStream()) {
+      OutputStream outputStream = response.getOutputStream();
+
+      // HttpServletResponse 객체의 메서드를 사용하여 HTTP status code, header 설정
+      response.setStatus(HttpStatus.OK.value());
+      response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+      response.setHeader("Content-Disposition", "filename=invoice.pdf");
+
+      // 파일을 읽어오는 InputStream 객체에서 데이터를 읽고, HttpServletResponse 의 OutputStream 객체에 데이터를 씀
+      StreamUtils.copy(inputStream, outputStream);
+    } catch (Throwable th) {
+      th.printStackTrace();
+      throw new FileDownloadException("file download error~");
+    }
   }
 }

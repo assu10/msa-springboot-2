@@ -2,11 +2,14 @@ package com.assu.study.chap05.controller;
 
 import com.assu.study.chap05.domain.HotelRoomType;
 import com.assu.study.chap05.utils.IdGenerator;
+import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -26,7 +29,7 @@ public class HotelRoomController {
   public HotelRoomResponse getHotelRoomByPeriod(
           @PathVariable(value="hotelId") Long hotelId,
           @PathVariable String roomNumber,  // value 생략 가능
-          @RequestParam(value = "fromDate", required = false) @DateTimeFormat(pattern = "yyyyMMdd")LocalDate fromDate,
+          @RequestParam(value = "fromDate", required = false) @DateTimeFormat(pattern = "yyyyMMdd") LocalDate fromDate,
           @RequestParam(value = "toDate", required = false) @DateTimeFormat(pattern = "yyyyMMdd") LocalDate toDate) {
 
     Long hotelRoodId = IdGenerator.create();
@@ -64,5 +67,32 @@ public class HotelRoomController {
     HotelRoomIdResponse body = HotelRoomIdResponse.from(1_002_003L);
 
     return new ResponseEntity<>(body, headers, HttpStatus.OK);
+  }
+
+  @PutMapping(path = "/hotels/{hotelId}/rooms/{roomNumber}")
+  public ResponseEntity<HotelRoomIdResponse> updateHotelRoomByRoomNumber(
+          @PathVariable Long hotelId,
+          @PathVariable String roomNumber,
+          // HotelRoomUpdateRequest 인자 검사, 검사 대상은 대상 클래스 안에 JSR-303 애너테이션이 선언된 속성들
+          @Valid @RequestBody HotelRoomUpdateRequest hotelRoomUpdateRequest,
+          // HotelRoomUpdateRequest 검증 결과와 결과를 조회할 수 있는 메서드 제공
+          BindingResult bindingResult
+  ) {
+
+    if (bindingResult.hasErrors()) {
+      FieldError fieldError = bindingResult.getFieldError();
+      String errorMessage = new StringBuilder("Validation error.")
+              .append(" filed: ").append(fieldError.getField()) // 검증에 실패한 속성명 확인
+              .append(", code: ").append(fieldError.getCode())  // 어떤 검증을 실패했는지 코드 확인 (=message?)
+              .append(", message: ").append(fieldError.getDefaultMessage())
+              .toString();
+
+      System.out.println(errorMessage);
+      return ResponseEntity.badRequest().build();
+    }
+
+    System.out.println(hotelRoomUpdateRequest.toString());
+    HotelRoomIdResponse body = HotelRoomIdResponse.from(1_002_003L);
+    return ResponseEntity.ok(body);
   }
 }
