@@ -27,7 +27,7 @@ public class HotelRoomResponse {
   private final BigDecimal originalPrice;
   private final List<Reservation> reservations;
 
-  public HotelRoomResponse(Long hotelRoomId, String roomNumber, HotelRoomType hotelRoomType, BigDecimal originalPrice) {
+  private HotelRoomResponse(Long hotelRoomId, String roomNumber, HotelRoomType hotelRoomType, BigDecimal originalPrice) {
     this.hotelRoomId = hotelRoomId;
     this.roomNumber = roomNumber;
     this.hotelRoomType = hotelRoomType;

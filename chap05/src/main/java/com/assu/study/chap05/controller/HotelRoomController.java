@@ -57,6 +57,8 @@ public class HotelRoomController {
   ) {
     System.out.println(hotelRoomRequest.toString());
 
+    // ResponseEntity 의 HTTP header 는 MultiValueMap 객체를 사용하여 설정
+    // add() 메서드를 사용하여 HTTP 헤더 추가 가능
     MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
     headers.add(HEADER_CREATED_AT, DATE_FORMATTER.format(ZonedDateTime.now()));
     HotelRoomIdResponse body = HotelRoomIdResponse.from(1_002_003L);

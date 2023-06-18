@@ -13,7 +13,7 @@ public class HotelRoomIdResponse {
   @JsonSerialize(using = ToStringSerializer.class)  // 마셜링 과정에서 hotelRoomId 의 Long 타입을 String 타입으로 변경
   private Long hotelRoomId;
 
-  public HotelRoomIdResponse(Long hotelRoomId) {
+  private HotelRoomIdResponse(Long hotelRoomId) {
     if (Objects.isNull(hotelRoomId)) {
       throw new IllegalArgumentException("hotelRoomId is null.");
     }
