@@ -9,6 +9,7 @@
         <module>chap03</module>
         <module>chap04</module>
         <module>chap05</module>
+        <module>chap06</module>
     </modules>
 
     <parent>
