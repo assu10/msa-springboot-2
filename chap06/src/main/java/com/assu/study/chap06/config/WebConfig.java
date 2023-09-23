@@ -1,8 +1,10 @@
 package com.assu.study.chap06.config;
 
 import com.assu.study.chap06.converter.HotelRoomNumberConverter;
+import com.assu.study.chap06.server.LoggingFilter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -11,8 +13,11 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
 import java.util.List;
 
@@ -27,6 +32,61 @@ public class WebConfig implements WebMvcConfigurer {
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
     return objectMapper;
+  }
+
+
+  @Override
+  public void addInterceptors(InterceptorRegistry registry) {
+    LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
+    // locale 파라메터값을 Locale 객체로 변경
+    localeChangeInterceptor.setParamName("locale");
+    System.out.println("--- Interceptor addInterceptors()");
+    // 인터셉터 추가
+    registry.addInterceptor(localeChangeInterceptor)
+        // 인터셉터 기능을 제외한 URI 패턴 입력
+        .excludePathPatterns("favicon.ico")
+        // 인터셉터가 동작할 경로
+        .addPathPatterns("/**");
+  }
+
+  @Bean
+  public FilterRegistrationBean<CharacterEncodingFilter> defaultCharacterEncodingFilter() {
+    System.out.println("-----defaultCharacterEncodingFilter");
+    CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
+    // CharacterEncodingFilter 의 기본 문자셋을 UTF-8 로 설정
+    encodingFilter.setEncoding("UTF-8");
+    // CharacterEncodingFilter 서블릿 필터가 적용되는 요청/응답 메시지 모두 설정된 문자셋으로 인코딩
+    encodingFilter.setForceEncoding(true);
+
+    FilterRegistrationBean<CharacterEncodingFilter> filterBean = new FilterRegistrationBean<>();
+    // 새로 생성한 FilterRegistrationBean 객체에 setFilter() 를 사용하여 CharacterEncodingFilter 서블릿 필터 객체 설정
+    filterBean.setFilter(encodingFilter);
+    // 초기 파라메터 설정
+    // 이 때 파라메터 명과 값을 넣으면 서블릿 필터 인터페이스인 Filter 의 init() 메서드 인자인 FilterConfig 객체에서 사용할 수 있음
+    filterBean.addInitParameter("paramName", "paramValue");
+    // 필터를 적용할 URL 패턴 설정
+    filterBean.addUrlPatterns("*");
+    // 두 개 이상의 서블릿 필터를 설정하여 서블릿 필터 체인으로 동작할 때 실행 순서 설정
+    filterBean.setOrder(1);
+
+    return filterBean;
+  }
+
+  @Bean
+  public FilterRegistrationBean<LoggingFilter> defaultLoggingFilter() {
+    System.out.println("-----defaultLoggingFilter");
+    LoggingFilter loggingFilter = new LoggingFilter();
+    FilterRegistrationBean<LoggingFilter> filterBean = new FilterRegistrationBean<>();
+    filterBean.setFilter(loggingFilter);
+    // 초기 파라메터 설정
+    // 이 때 파라메터 명과 값을 넣으면 서블릿 필터 인터페이스인 Filter 의 init() 메서드 인자인 FilterConfig 객체에서 사용할 수 있음
+    filterBean.addInitParameter("paramName", "paramValue");
+    // 필터를 적용할 URL 패턴 설정
+    filterBean.addUrlPatterns("*");
+    // 두 개 이상의 서블릿 필터를 설정하여 서블릿 필터 체인으로 동작할 때 실행 순서 설정
+    filterBean.setOrder(2);
+
+    return filterBean;
   }
 
   //  @Override
