@@ -1,6 +1,7 @@
 package com.assu.study.chap06.config;
 
 import com.assu.study.chap06.converter.HotelRoomNumberConverter;
+import com.assu.study.chap06.resolver.ClientInfoArgumentResolver;
 import com.assu.study.chap06.server.LoggingFilter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,6 +15,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -168,11 +170,11 @@ public class WebConfig implements WebMvcConfigurer {
   public void addFormatters(FormatterRegistry registry) {
     registry.addConverter(new HotelRoomNumberConverter());
   }
-//
-//  @Override
-//  public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-//    resolvers.add(new ClientInfoArgumentResolver());
-//  }
+
+  @Override
+  public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+    resolvers.add(new ClientInfoArgumentResolver());
+  }
 //
 //  @Bean(value = "localeResolver")
 //  public LocaleResolver localeResolver() {
