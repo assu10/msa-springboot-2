@@ -16,12 +16,15 @@ import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConve
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import java.util.List;
+import java.util.Locale;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -36,11 +39,31 @@ public class WebConfig implements WebMvcConfigurer {
     return objectMapper;
   }
 
+  //@Bean(value = "localeResolver")
+//  public LocaleResolver localeResolver() {
+//    AcceptHeaderLocaleResolver acceptHeaderLocaleResolver = new AcceptHeaderLocaleResolver();
+//    // Locale 객체를 생성할 수 없을 때 기본 Locale 객체 설정
+//    // Accept-Language 헤더가 없거나 알 수 없는 헤더값이 전달되면 Locale 객체는 KOREAN 으로 설정됨
+//    acceptHeaderLocaleResolver.setDefaultLocale(Locale.KOREAN);
+//    return acceptHeaderLocaleResolver;
+//  }
+
+  // 헤더의 Accept-Language 가 아닌 파라메터로 Locale 값 변경 시 사용
+  @Bean(value = "localeResolver")
+  public LocaleResolver localeResolver() {
+    SessionLocaleResolver sessionLocaleResolver = new SessionLocaleResolver();
+    sessionLocaleResolver.setDefaultLocale(Locale.KOREA);
+
+    return sessionLocaleResolver;
+  }
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
+    // 클라이언트가 웹 서버에 리소스를 요청할 때 Accept-Language 헤더가 아닌 파라메터로 Locale 값을 변경하고 싶을 때 LocaleChangeInterceptor 사용
     LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
+
     // locale 파라메터값을 Locale 객체로 변경
+    // GET /hotels?locale=ko 로 요청 시 Locale 객체를 생성
     localeChangeInterceptor.setParamName("locale");
     System.out.println("--- Interceptor addInterceptors()");
     // 인터셉터 추가
@@ -175,13 +198,6 @@ public class WebConfig implements WebMvcConfigurer {
   public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
     resolvers.add(new ClientInfoArgumentResolver());
   }
-//
-//  @Bean(value = "localeResolver")
-//  public LocaleResolver localeResolver() {
-//    AcceptHeaderLocaleResolver acceptHeaderLocaleResolver = new AcceptHeaderLocaleResolver();
-//    acceptHeaderLocaleResolver.setDefaultLocale(Locale.KOREAN);
-//    return acceptHeaderLocaleResolver;
-//  }
 
   // Accept 헤더값에 따라 json, xml 로 응답
   @Override

@@ -19,7 +19,6 @@ public class EmailAddress {
     this.localPart = localPart;
   }
 
-  @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     if (Objects.nonNull(name)) {
