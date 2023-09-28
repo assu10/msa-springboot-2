@@ -1,15 +1,17 @@
 package com.assu.study.chap06.server;
 
 import jakarta.servlet.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 
+@Slf4j
 public class LoggingFilter implements Filter {
   @Override
   public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-    System.out.println("--- LoggingFilter doFilter: 선처리 작업");
+    log.info("--- LoggingFilter doFilter: 선처리 작업");
     filterChain.doFilter(servletRequest, servletResponse);
-    System.out.println("--- LoggingFilter doFilter: 후처리 작업");
+    log.info("--- LoggingFilter doFilter: 후처리 작업");
   }
 
   @Override
