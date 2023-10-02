@@ -16,7 +16,8 @@ public class HotelDisplayService implements DisplayService {
   @ElapseLoggable
   // 메서드 처리 시간을 로깅하기 위해 @ElapseLoggable 애너테이션 정의, 해당 애너테이션의 @Target 설정은 ElementType.METHOD 이므로 메서드에만 사용 가능
   public List<HotelResponse> getHotelsByName(HotelRequest hotRequest) {
-
+    log.info("getHotelsByName() 실행~");
+    
     //  throw new RuntimeException("test exception");
 
     try {
