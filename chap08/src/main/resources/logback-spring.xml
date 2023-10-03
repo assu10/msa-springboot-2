@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+
+    <!-- logger 설정, org.springframework.beans.factory 패키지에 포함되는 클래스에서 발생하는 모든 로그 메시지 중 warn 레벨 이상만 로깅 -->
+    <logger name="org.springframework.beans.factory" level="warn"/>
+
+    <!-- sql -->
+    <logger name="org.hibernate.SQL" level="DEBUG"/>
+    <logger name="org.hibernate.type" level="TRACE"/>
+    <logger name="org.hibernate.type.descriptor.jdbc.BasicBinder" level="DEBUG"/>
+
+    <springProfile name="local">
+        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>[%d{yyyy/MM/dd HH:mm:ss.SSS}] %magenta([%thread]) %highlight(%-5level) %logger{36} - %msg%n
+                </pattern>
+            </encoder>
+        </appender>
+
+        <!-- root 설정으로 애플리케이션에서 발생하는 모든 로그 중 info 레벨 이상의 로깅 -->
+        <!-- 하위에 포함된 appender-ref 설정으로 모든 로그 메시지는 STDOUT 으로 전달되며 그 결과가 콘솔에 출력됨 -->
+        <root level="info">
+            <appender-ref ref="STDOUT"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="dev">
+        <appender name="systemLogAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_PATH}/system-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <maxFileSize>100MB</maxFileSize><!-- 로그 파일 크기가 100M 가 넘어가면 로그 파일 분리 -->
+                </timeBasedFileNamingAndTriggeringPolicy>
+                <maxHistory>30</maxHistory><!-- 최대 30일 동안 로그 유지 -->
+            </rollingPolicy>
+            <encoder>
+                <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <root level="info">
+            <appender-ref ref="systemLogAppender"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="production">
+        <appender name="systemLogAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_PATH}/system-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <timeBasedFileNamingAndTriggeringPolicy
+                        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <maxFileSize>100MB</maxFileSize>
+                </timeBasedFileNamingAndTriggeringPolicy>
+                <maxHistory>30</maxHistory>
+            </rollingPolicy>
+            <encoder>
+                <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <root level="warn">
+            <appender-ref ref="systemLogAppender"/>
+        </root>
+    </springProfile>
+
+</configuration>
