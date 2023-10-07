@@ -1,12 +1,13 @@
 package com.assu.stury.chap08.domain;
 
+import com.assu.stury.chap08.domain.converter.HotelStatusConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 
 //@NoArgsConstructor
-@Entity
 @Getter
 @Table(name = "hotels")
+@Entity(name = "hotels")
 public class HotelEntity extends AbstractManageEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +21,8 @@ public class HotelEntity extends AbstractManageEntity {
 //  @Enumerated(value = EnumType.STRING)
 //  private HotelStatusTemp status;
 
-  @Column
-  @Convert(converter = HotelStatus.class)
+  @Column(name = "status")
+  @Convert(converter = HotelStatusConverter.class)
   private HotelStatus status;
 
   @Column
