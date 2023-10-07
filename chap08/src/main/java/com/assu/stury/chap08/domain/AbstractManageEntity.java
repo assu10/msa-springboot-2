@@ -1,6 +1,5 @@
 package com.assu.stury.chap08.domain;
 
-import com.assu.stury.chap08.server.UserIdHolder;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
@@ -28,6 +27,7 @@ public abstract class AbstractManageEntity {
 
   public AbstractManageEntity() {
     this.createdAt = ZonedDateTime.now();
-    this.createdBy = UserIdHolder.getUserId();
+    //this.createdBy = UserIdHolder.getUserId();
+    this.createdBy = "aaa";
   }
 }
