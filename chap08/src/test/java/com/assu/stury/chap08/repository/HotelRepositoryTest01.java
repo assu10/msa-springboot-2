@@ -24,7 +24,7 @@ class HotelRepositoryTest01 {
   // 모든 테스트 케이스들을 실행할때마다 초기값 설정
   @BeforeEach
   void setUp() {
-    testHotelEntity = HotelEntity.of("ASSU HOTEL", "SEOUL", "+8201011112222", 100);
+    testHotelEntity = HotelEntity.of("ASSU HOTEL", "SEOUL", "+8201011112222");
   }
 
   @Test
