@@ -11,12 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+// 16저1200
 @SpringBootTest
-@Transactional
+//@Transactional
 @TestPropertySource(locations = "classpath:application-test.properties")
 class HotelServiceTest {
 
