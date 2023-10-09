@@ -6,32 +6,33 @@ import com.assu.stury.chap08.domain.HotelEntity;
 import com.assu.stury.chap08.domain.HotelRoomEntity;
 import com.assu.stury.chap08.domain.HotelRoomType;
 import com.assu.stury.chap08.repository.HotelRepository;
-import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+@Slf4j
 @Service
 public class HotelService {
 //  @Autowired
 //  private HotelService hotelService;
 
-  @Autowired
-  private ApplicationContext applicationContext;
-
-  private HotelService self;
-
-  @PostConstruct
-  private void init() {
-    self = applicationContext.getBean(HotelService.class);
-  }
+//  @Autowired
+//  private ApplicationContext applicationContext;
+//
+//  private HotelService self;
+//
+//  @PostConstruct
+//  private void init() {
+//    self = applicationContext.getBean(HotelService.class);
+//  }
 
   private final HotelRepository hotelRepository;
 
@@ -48,6 +49,7 @@ public class HotelService {
         createRequest.getPhoneNumber()
     );
 
+    createRequest.setRoomCount(1);
     int roomCount = createRequest.getRoomCount();
     List<HotelRoomEntity> hotelRoomEntitis = IntStream.range(0, roomCount)  // IntStream 반환
         .mapToObj(i -> HotelRoomEntity.of("ROOM-" + i, HotelRoomType.DOUBLE, BigDecimal.valueOf(100)))  // Stream<HotelRoomEntity> 반환
@@ -56,16 +58,25 @@ public class HotelService {
     hotelEntity.addHotelRooms(hotelRoomEntitis);
 
     hotelRepository.save(hotelEntity);
+
+    TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+      @Override
+      public void afterCommit() {
+        log.info("---afterCommit");
+        // billingApiAdapter.registerHotelCode(hotelEntity.getHotelId()); // 커밋이 되면 다른 스프링 빈의 regisgerHotelCode() 실행
+      }
+    });
+
     return HotelCreateResponse.of(hotelEntity.getHotelId());
   }
 
   // this 키워드를 사용하여 @Transactional 애너테이션이 걸려 있는 내부 메서드 호출하는 예시
-  public List<HotelCreateResponse> createHotels(List<HotelCreateRequest> createRequests) {
+//  public List<HotelCreateResponse> createHotels(List<HotelCreateRequest> createRequests) {
+////    return createRequests.stream()
+////        .map(createRequest -> this.createHotel(createRequest))
+////        .collect(Collectors.toList());
 //    return createRequests.stream()
-//        .map(createRequest -> this.createHotel(createRequest))
+//        .map(createRequest -> self.createHotel(createRequest))
 //        .collect(Collectors.toList());
-    return createRequests.stream()
-        .map(createRequest -> self.createHotel(createRequest))
-        .collect(Collectors.toList());
-  }
+//  }
 }

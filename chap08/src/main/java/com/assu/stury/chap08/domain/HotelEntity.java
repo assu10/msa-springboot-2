@@ -1,6 +1,7 @@
 package com.assu.stury.chap08.domain;
 
 import com.assu.stury.chap08.domain.converter.HotelStatusConverter;
+import com.assu.stury.chap08.service.HotelAuditListener;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Getter
 @Table(name = "hotels")
 @Entity(name = "hotels")
+@EntityListeners(HotelAuditListener.class)    // 한 개 이상의 리스너 클래스 설정 가능
 public class HotelEntity extends AbstractManageEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
