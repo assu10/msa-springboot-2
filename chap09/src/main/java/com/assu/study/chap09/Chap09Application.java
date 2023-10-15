@@ -27,6 +27,9 @@ public class Chap09Application {
     // createWithPostForEntity: CreateCodeResponse(codes=[1234567])
     log.info("createWithPostForEntity: {}", createCodeResponse);
 
+    CreateCodeResponse createCodeResponse2 = billingAdapter.createWithExchange(List.of(1234567L, 111L, 876456L));
+    // createWithExchange: CreateCodeResponse(codes=[1234567, 111, 876456])
+    log.info("createWithExchange: {}", createCodeResponse2);
   }
 
 }

@@ -5,8 +5,8 @@ import com.assu.study.chap09.controller.BillingCodeResponse;
 import com.assu.study.chap09.controller.CreateCodeRequest;
 import com.assu.study.chap09.controller.CreateCodeResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -20,10 +20,46 @@ import java.util.Objects;
 @Slf4j
 public class BillingAdapter {
 
+  // ParameterizedTypeReference 를 사용하여 ApiResponse<CreateCodeResponse> 처럼 중첩된 클래스 타입에 대한 클래스 타입 정보 정의
+  private static final ParameterizedTypeReference<ApiResponse<CreateCodeResponse>> TYPE_REFERENCE;
+
+  static {
+    TYPE_REFERENCE = new ParameterizedTypeReference<>() {
+    };
+  }
+
   private final RestTemplate restTemplate;
 
   public BillingAdapter(RestTemplate restTemplate) {
     this.restTemplate = restTemplate;
+  }
+
+  // exchange() 로 REST-API 호출
+  public CreateCodeResponse createWithExchange(List<Long> hotelIds) {
+    URI uri = UriComponentsBuilder.fromPath("/billing-codes")
+        .scheme("http").host("127.0.0.1").port(8080)
+        .build(false).encode().toUri();
+
+    CreateCodeRequest request = new CreateCodeRequest(1, hotelIds);
+
+    HttpHeaders headers = new HttpHeaders();
+    // 요청 메시지의 바디가 JSON 메시지이므로 Content-type 헤더 추가
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    // HTTP 요청 메시지를 생성하려고 HttpEntity 객체 생성
+    HttpEntity<CreateCodeRequest> httpEntity = new HttpEntity<>(request, headers);
+
+    // HTTP 요청 메시지는 HttpEntity 객체 사용
+    // 리턴 타입은 ParameterizedTypeReference 를 사용하여 정의
+    ResponseEntity<ApiResponse<CreateCodeResponse>> responseEntity =
+        restTemplate.exchange(uri, HttpMethod.POST, httpEntity, TYPE_REFERENCE);
+
+    if (HttpStatus.OK != responseEntity.getStatusCode()) {
+      log.error("Error from Billing. status:{}, hotelIds:{}", responseEntity.getStatusCode(), hotelIds);
+      throw new RuntimeException("Error from Billing. " + responseEntity.getStatusCode());
+    }
+
+    // 타입 캐스팅없이 클래스 타입에 안전하게 CreateCodeResponse 객체 리턴
+    return responseEntity.getBody().getData();
   }
 
   public CreateCodeResponse createWithPostForEntity(List<Long> hotelIds) {
