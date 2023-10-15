@@ -1,4 +1,4 @@
-package com.assu.study.chap09.Adapter;
+package com.assu.study.chap09.adapter;
 
 import com.assu.study.chap09.controller.ApiResponse;
 import com.assu.study.chap09.controller.BillingCodeResponse;

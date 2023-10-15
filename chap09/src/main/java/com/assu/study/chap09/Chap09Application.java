@@ -1,6 +1,6 @@
 package com.assu.study.chap09;
 
-import com.assu.study.chap09.Adapter.BillingAdapter;
+import com.assu.study.chap09.adapter.BillingAdapter;
 import com.assu.study.chap09.controller.BillingCodeResponse;
 import com.assu.study.chap09.controller.CreateCodeResponse;
 import lombok.extern.slf4j.Slf4j;

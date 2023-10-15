@@ -19,5 +19,11 @@
             <version>5.2.1</version>
         </dependency>
 
+        <!-- WebClient 를 사용하기 위함 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+
     </dependencies>
 </project>
