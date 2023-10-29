@@ -3,6 +3,7 @@ package com.assu.study.chap10.config;
 import com.assu.study.chap10.adapter.cache.HotelCacheKey;
 import com.assu.study.chap10.adapter.cache.HotelCacheKeySerializer;
 import com.assu.study.chap10.adapter.cache.HotelCacheValue;
+import com.assu.study.chap10.adapter.cache.HotelCacheValueSerializer;
 import io.lettuce.core.ClientOptions;
 import io.lettuce.core.SocketOptions;
 import lombok.extern.slf4j.Slf4j;
@@ -13,8 +14,6 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 
@@ -97,13 +96,13 @@ public class CacheConfig {
     hotelCacheRedisTemplate.setConnectionFactory(cacheRedisConnectionFactory());
 
     // key 와 value 값을 직렬화/역직렬화하는 RedisSerializer 구현체 설정
-//    hotelCacheRedisTemplate.setKeySerializer(new HotelCacheKeySerializer());
-//    hotelCacheRedisTemplate.setValueSerializer(new HotelCacheValueSerializer());
+    hotelCacheRedisTemplate.setKeySerializer(new HotelCacheKeySerializer());
+    hotelCacheRedisTemplate.setValueSerializer(new HotelCacheValueSerializer());
 
     // Hash 자료 구조 사용 시 레디스 key, hash filed, hash value 의 RedisSerializer 3개 설정 필요
-    hotelCacheRedisTemplate.setKeySerializer(new HotelCacheKeySerializer());
-    hotelCacheRedisTemplate.setHashKeySerializer(new StringRedisSerializer());
-    hotelCacheRedisTemplate.setHashValueSerializer(new Jackson2JsonRedisSerializer<HotelCacheValue>(HotelCacheValue.class));
+//    hotelCacheRedisTemplate.setKeySerializer(new HotelCacheKeySerializer());
+//    hotelCacheRedisTemplate.setHashKeySerializer(new StringRedisSerializer());
+//    hotelCacheRedisTemplate.setHashValueSerializer(new Jackson2JsonRedisSerializer<HotelCacheValue>(HotelCacheValue.class));
 
     return hotelCacheRedisTemplate;
   }
