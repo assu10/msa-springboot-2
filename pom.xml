@@ -14,6 +14,7 @@
         <module>chap08</module>
         <module>chap09</module>
         <module>chap10</module>
+        <module>chap11</module>
     </modules>
 
     <parent>
