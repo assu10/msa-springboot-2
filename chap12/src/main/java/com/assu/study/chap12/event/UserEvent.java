@@ -4,9 +4,10 @@ import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
 // 이벤트 메시지 클래스
+// 불변(immutable) 클래스 이어야 하므로 Setter 는 없음
 // 유저를 생성/삭제할 때 게시할 목적으로 사용됨
 @Getter
-public class UserEvent extends ApplicationEvent {   // 이벤트 메시지 클래스이므로 ApplicationEvent 상속
+public final class UserEvent extends ApplicationEvent {   // 이벤트 메시지 클래스이므로 ApplicationEvent 상속
     private final Type type;
     private final Long userId;
     private final String email;
