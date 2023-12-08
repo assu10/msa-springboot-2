@@ -1,15 +1,14 @@
 package com.assu.study.chap12.config;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.context.event.SimpleApplicationEventMulticaster;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-@Configuration
+//@Configuration
 public class AsyncEventConfig {
-    @Bean("applicationEventMulticaster")    // 반드시 AbstractApplicationContext 에서 지정한 스프링 빈 이름으로 설정
+    //@Bean("applicationEventMulticaster")    // 반드시 AbstractApplicationContext 에서 지정한 스프링 빈 이름으로 설정
     public ApplicationEventMulticaster applicationEventMulticaster(TaskExecutor asyncEventTaskExecutor) {
         SimpleApplicationEventMulticaster eventMulticaster = new SimpleApplicationEventMulticaster();
         eventMulticaster.setTaskExecutor(asyncEventTaskExecutor);   // 스레드 풀 설정

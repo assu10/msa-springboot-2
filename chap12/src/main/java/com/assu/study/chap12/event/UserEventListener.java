@@ -3,6 +3,7 @@ package com.assu.study.chap12.event;
 import com.assu.study.chap12.service.EventService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 // 구독 클래스
@@ -18,6 +19,7 @@ public class UserEventListener implements ApplicationListener<UserEvent> {  // A
         this.eventService = eventService;
     }
 
+    @Async
     @Override
     public void onApplicationEvent(UserEvent event) {
         if (UserEvent.Type.CREATE == event.getType()) {
