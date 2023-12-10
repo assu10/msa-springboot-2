@@ -6,6 +6,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 // 구독 클래스
 @Slf4j
@@ -25,6 +26,7 @@ public class HotelEventListener {
     // 하나 이상의 클래스 타입 설정 가능
     // 정의된 이벤트 메시지가 게시되면 @EventListener 애너테이션이 정의된 메서드가 이벤트를 구독하고 실행함
     @EventListener(value = HotelCreateEvent.class)
+    @TransactionalEventListener(classes = HotelCreateEvent.class, fallbackExecution = true)
     // 구독한 이벤트 객체를 메서드의 인자로 받을 수 있음
     public void handleHotelCreateEvent(HotelCreateEvent hotelCreateEvent) {
         log.info("handle HotelCreatedEvent : {}", hotelCreateEvent);
